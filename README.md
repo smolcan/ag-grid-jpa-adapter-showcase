@@ -1,4 +1,4 @@
-# Showcase for AG Grid JPA Adapter
+# Showcase for [AG Grid JPA Adapter](https://github.com/smolcan/ag-grid-jpa-adapter)
 
 Showcase using PostgreSQL database, Spring boot backend and Angular client.
 
