@@ -1,0 +1,15 @@
+<div class="custom-filter">
+  <div>Select Year Range</div>
+  <label>
+    <input type="radio" name="value" [(ngModel)]="value" (ngModelChange)="updateFilter()" [value]="'All'" />
+    All
+  </label>
+  <label>
+    <input type="radio" name="value" [(ngModel)]="value" (ngModelChange)="updateFilter()" [value]="'Even'" />
+    Even
+  </label>
+  <label>
+    <input type="radio" name="value" [(ngModel)]="value" (ngModelChange)="updateFilter()" [value]="'Odd'" />
+    Odd
+  </label>
+</div>

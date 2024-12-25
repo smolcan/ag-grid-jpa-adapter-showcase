@@ -1,0 +1,19 @@
+<button (click)="toggleAdvancedFilter()">
+  {{enableAdvancedFilter ? 'DISABLE ADVANCED FILTER' : 'ENABLE ADVANCED FILTER'}}
+</button>
+<button (click)="toggleShowSidebar()">
+  {{showSidebar ? 'HIDE SIDEBAR' : 'SHOW SIDEBAR'}}
+</button>
+
+
+<ag-grid-angular
+  [defaultColDef]="defaultColDef"
+  [rowModelType]="'serverSide'"
+  [serverSideDatasource]="serverSideDatasource"
+  [rowGroupPanelShow]="'always'"
+  [theme]="theme"
+  style="height: 700px;"
+  [columnDefs]="colDefs"
+  [enableAdvancedFilter]="enableAdvancedFilter"
+  [sideBar]="showSidebar"
+/>

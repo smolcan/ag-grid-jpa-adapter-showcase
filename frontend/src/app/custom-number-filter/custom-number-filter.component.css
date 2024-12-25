@@ -1,0 +1,15 @@
+.custom-filter {
+  width: 200px;
+}
+
+.custom-filter > * {
+  margin: 8px;
+}
+
+.custom-filter > div:first-child {
+  font-weight: bold;
+}
+
+.custom-filter > label {
+  display: inline-block;
+}
