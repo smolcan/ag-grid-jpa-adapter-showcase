@@ -78,6 +78,7 @@ export class AppComponent {
     filter: true,
     enableRowGroup: true,
     enableValue: true,
+    enablePivot: true,
   };
 
   // Column Definitions: Defines the columns to be displayed.
