@@ -1,10 +1,7 @@
 package io.github.smolcan.ag_grid_jpa_adapter_showcase.model.dto;
 
 import io.github.smolcan.aggrid.jpa.adapter.filter.simple.ColumnFilter;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 
 public class CustomNumberFilter extends ColumnFilter {
     
@@ -25,6 +22,20 @@ public class CustomNumberFilter extends ColumnFilter {
             return cb.equal(cb.mod(field, 2), 0);
         } else {
             return cb.notEqual(cb.mod(field, 2), 0);
+        }
+    }
+
+    @Override
+    public Predicate toPredicate(CriteriaBuilder cb, Expression<?> expression) {
+        if (this.value == null || this.value.equalsIgnoreCase("All")) {
+            return cb.and();
+        }
+
+        Expression<Integer> integerExpression = expression.as(Integer.class);
+        if (this.value.equalsIgnoreCase("Even")) {
+            return cb.equal(cb.mod(integerExpression, 2), 0);
+        } else {
+            return cb.notEqual(cb.mod(integerExpression, 2), 0);
         }
     }
 

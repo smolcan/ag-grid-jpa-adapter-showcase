@@ -2,7 +2,7 @@ import {AgGridAngular} from 'ag-grid-angular';
 import {Component} from '@angular/core';
 import {ColDef} from 'ag-grid-community'; // Column Definition Type Interface
 import {
-  AllEnterpriseModule,
+  AllEnterpriseModule, GridApi, GridReadyEvent,
   IServerSideDatasource,
   IServerSideGetRowsParams, ITextFilterParams,
   LoadSuccessParams, ModuleRegistry
@@ -10,6 +10,7 @@ import {
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {CustomNumberFilterComponent} from './custom-number-filter/custom-number-filter.component';
 import {themeAlpine} from 'ag-grid-community';
+import {Trade} from './trade';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,9 @@ import {themeAlpine} from 'ag-grid-community';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+
+  private gridApi: GridApi<Trade> | null = null;
+  pivotMode: boolean = false;
 
   theme = themeAlpine.withParams({
     /* Changes the color of the grid text */
@@ -46,6 +50,10 @@ export class AppComponent {
   });
 
   enableAdvancedFilter = false;
+
+  gridReady(event: GridReadyEvent<Trade>) {
+    this.gridApi = event.api;
+  }
 
   toggleAdvancedFilter() {
     this.enableAdvancedFilter = !this.enableAdvancedFilter;
@@ -195,4 +203,31 @@ export class AppComponent {
     },
     {field: 'isSold', headerName: 'Is Sold', cellDataType: 'boolean', filterParams: {values: [true, false]}},
   ];
+
+  tryPivoting() {
+    if (!this.gridApi) {
+      return;
+    }
+
+    this.pivotMode = true;
+    // Update existing colDefs dynamically for pivoting
+    this.colDefs = this.colDefs.map((colDef) => {
+      if (colDef.field === 'product' || colDef.field === 'portfolio') {
+        return { ...colDef, rowGroup: true }; // Set as row group
+      }
+      if (colDef.field === 'book' || colDef.field === 'dealType' || colDef.field === 'bidType') {
+        return { ...colDef, pivot: true }; // Set as pivot
+      }
+      if (colDef.field === 'currentValue') {
+        return { ...colDef, aggFunc: 'sum' }; // Set aggregation function
+      }
+      if (colDef.field === 'submitterId') {
+        return { ...colDef, aggFunc: 'count' }; // Count aggregation
+      }
+      if (colDef.field === 'birthDate') {
+        return { ...colDef, aggFunc: 'min' }; // Minimum aggregation
+      }
+      return colDef; // Leave other columns unchanged
+    });
+  }
 }

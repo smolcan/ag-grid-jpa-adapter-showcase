@@ -4,7 +4,9 @@
 <button (click)="toggleShowSidebar()">
   {{showSidebar ? 'HIDE SIDEBAR' : 'SHOW SIDEBAR'}}
 </button>
-
+<button (click)="tryPivoting()">
+  try pivoting
+</button>
 
 <ag-grid-angular
   [defaultColDef]="defaultColDef"
@@ -12,7 +14,9 @@
   [serverSideDatasource]="serverSideDatasource"
   [rowGroupPanelShow]="'always'"
   [theme]="theme"
+  [pivotMode]="pivotMode"
   style="height: 700px;"
+  (gridReady)="gridReady($event)"
   [columnDefs]="colDefs"
   [pivotPanelShow]="'onlyWhenPivoting'"
   [enableAdvancedFilter]="enableAdvancedFilter"
