@@ -91,6 +91,7 @@ export class AppComponent {
 
   // Column Definitions: Defines the columns to be displayed.
   colDefs: ColDef[] = [
+    // multi column filter demonstration with custom filter
     {
       field: 'tradeId',
       headerName: 'Trade ID',
@@ -100,15 +101,12 @@ export class AppComponent {
       filterParams: {
         filters: [
           {
-            filter: 'agSetColumnFilter',
-            filterParams: {
-              values: [1013559, 1013560, 1013560.2324]
-            }
+            filter: 'agNumberColumnFilter',
           },
           {
             filter: CustomNumberFilterComponent,
           }
-        ]
+        ],
       }
     },
     {
@@ -118,7 +116,46 @@ export class AppComponent {
       cellDataType: 'text',
       filter: 'agMultiColumnFilter',
       filterParams: {
-        values: ['ProductA', 'ProductB', 'ProductC']
+        filters: [
+          {
+            filter: 'agTextColumnFilter',
+          },
+          {
+            filter: 'agSetColumnFilter',
+            filterParams: {
+              values: ['Product 1', 'Product 2', 'Product 3', 'Product 4'],
+            }
+          }
+        ],
+      },
+    },
+    {
+      field: 'birthDate',
+      headerName: 'Birth Date',
+      sortable: true,
+      cellDataType: 'dateString',
+      filter: 'agMultiColumnFilter',
+      filterParams: {
+        filters: [
+          {
+            filter: 'agDateColumnFilter',
+          },
+          {
+            filter: 'agSetColumnFilter',
+            filterParams: {
+              values: ['2025-01-09', '1973-09-23'],
+            }
+          }
+        ],
+      },
+    },
+    {
+      field: 'isSold',
+      headerName: 'Is Sold',
+      cellDataType: 'boolean',
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        values: [true, false],
       }
     },
     {
@@ -126,44 +163,41 @@ export class AppComponent {
       headerName: 'Portfolio',
       sortable: true,
       cellDataType: 'text',
-      filter: 'agMultiColumnFilter',
-      filterParams: {
-        filters: [
-          {
-            filter: 'agSetColumnFilter',
-            filterParams: {
-              values: ['Portfolio1', 'Portfolio2', 'Portfolio3']
-            }
-          },
-          {
-            filter: 'agTextColumnFilter',
-            filterParams: {
-              defaultOption: "startsWith",
-            } as ITextFilterParams,
-          },
-        ]
-      }
+      filter: 'agTextColumnFilter',
     },
     {
       field: 'book',
       headerName: 'Book',
       sortable: true,
       cellDataType: 'text',
-      filter: true
+      filter: 'agTextColumnFilter',
     },
     {
       field: 'submitterId',
       headerName: 'Submitter ID',
       cellDataType: 'number',
       sortable: true,
-      filter: true
+      filter: 'agMultiColumnFilter',
+      filterParams: {
+        filters: [
+          {
+            filter: 'agNumberColumnFilter',
+          },
+          {
+            filter: 'agSetColumnFilter',
+            filterParams: {
+              values: ['10', '20', '30', '40'],
+            }
+          }
+        ],
+      },
     },
     {
       field: 'submitterDealId',
       headerName: 'Submitter Deal ID',
       cellDataType: 'number',
       sortable: true,
-      filter: true
+      filter: 'agNumberColumnFilter',
     },
     {
       field: 'dealType',
@@ -172,7 +206,13 @@ export class AppComponent {
       cellDataType: 'text',
       filter: 'agTextColumnFilter'
     },
-    {field: 'bidType', headerName: 'Bid Type', sortable: true, cellDataType: 'text', filter: 'agTextColumnFilter'},
+    {
+      field: 'bidType',
+      headerName: 'Bid Type',
+      sortable: true,
+      cellDataType: 'text',
+      filter: 'agTextColumnFilter'
+    },
     {
       field: 'currentValue',
       headerName: 'Current Value',
@@ -193,41 +233,29 @@ export class AppComponent {
     {field: 'sxPx', headerName: 'SX Px', sortable: true, cellDataType: 'number', filter: 'agNumberColumnFilter'},
     {field: 'x99Out', headerName: 'X99 Out', sortable: true, cellDataType: 'number', filter: 'agNumberColumnFilter'},
     {field: 'batch', headerName: 'Batch', sortable: true, cellDataType: 'number', filter: 'agNumberColumnFilter'},
-    {
-      field: 'birthDate',
-      headerName: 'Birth Date',
-      sortable: true,
-      cellDataType: 'dateString',
-      filter: 'agSetColumnFilter',
-      filterParams: {values: ['1993-06-24', '1973-09-23']}
-    },
     {field: 'isSold', headerName: 'Is Sold', cellDataType: 'boolean', filterParams: {values: [true, false]}},
   ];
 
-  tryPivoting() {
-    if (!this.gridApi) {
-      return;
+  pivotingColDefs = this.colDefs.map((colDef) => {
+    if (colDef.field === 'product' || colDef.field === 'portfolio') {
+      return { ...colDef, rowGroup: true }; // Set as row group
     }
+    if (colDef.field === 'book' || colDef.field === 'dealType' || colDef.field === 'bidType') {
+      return { ...colDef, pivot: true }; // Set as pivot
+    }
+    if (colDef.field === 'currentValue') {
+      return { ...colDef, aggFunc: 'sum' }; // Set aggregation function
+    }
+    if (colDef.field === 'submitterId') {
+      return { ...colDef, aggFunc: 'count' }; // Count aggregation
+    }
+    if (colDef.field === 'birthDate') {
+      return { ...colDef, aggFunc: 'min' }; // Minimum aggregation
+    }
+    return colDef; // Leave other columns unchanged
+  });
 
-    this.pivotMode = true;
-    // Update existing colDefs dynamically for pivoting
-    this.colDefs = this.colDefs.map((colDef) => {
-      if (colDef.field === 'product' || colDef.field === 'portfolio') {
-        return { ...colDef, rowGroup: true }; // Set as row group
-      }
-      if (colDef.field === 'book' || colDef.field === 'dealType' || colDef.field === 'bidType') {
-        return { ...colDef, pivot: true }; // Set as pivot
-      }
-      if (colDef.field === 'currentValue') {
-        return { ...colDef, aggFunc: 'sum' }; // Set aggregation function
-      }
-      if (colDef.field === 'submitterId') {
-        return { ...colDef, aggFunc: 'count' }; // Count aggregation
-      }
-      if (colDef.field === 'birthDate') {
-        return { ...colDef, aggFunc: 'min' }; // Minimum aggregation
-      }
-      return colDef; // Leave other columns unchanged
-    });
+  togglePivoting() {
+    this.pivotMode = !this.pivotMode;
   }
 }

@@ -1,16 +1,32 @@
-.example-wrapper {
+.button-container {
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  gap: 10px; /* Space between buttons */
+  flex-wrap: wrap; /* Ensure buttons wrap in smaller screens */
+  margin-bottom: 15px; /* Space below the button group */
 }
 
-#myGrid {
-  flex: 1 1 0px;
-  width: 100%;
+.styled-button {
+  background-color: #007bff; /* Primary color */
+  color: #fff; /* Text color */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Padding for clickability */
+  font-size: 14px; /* Adjust font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.example-header {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 13px;
-  margin-bottom: 5px;
+.styled-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.styled-button:active {
+  background-color: #003f7f; /* Even darker shade when active */
+  transform: scale(1); /* Reset zoom effect */
+}
+
+.styled-button:disabled {
+  background-color: #cccccc; /* Gray for disabled state */
+  cursor: not-allowed; /* Indicate non-clickable */
 }

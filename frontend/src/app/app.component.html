@@ -1,12 +1,14 @@
-<button (click)="toggleAdvancedFilter()">
-  {{enableAdvancedFilter ? 'DISABLE ADVANCED FILTER' : 'ENABLE ADVANCED FILTER'}}
-</button>
-<button (click)="toggleShowSidebar()">
-  {{showSidebar ? 'HIDE SIDEBAR' : 'SHOW SIDEBAR'}}
-</button>
-<button (click)="tryPivoting()">
-  try pivoting
-</button>
+<div class="button-container">
+  <button class="styled-button" (click)="toggleAdvancedFilter()">
+    {{enableAdvancedFilter ? 'DISABLE ADVANCED FILTER' : 'ENABLE ADVANCED FILTER'}}
+  </button>
+  <button class="styled-button" (click)="toggleShowSidebar()">
+    {{showSidebar ? 'HIDE SIDEBAR' : 'SHOW SIDEBAR'}}
+  </button>
+  <button class="styled-button" (click)="togglePivoting()">
+    {{pivotMode ? 'cancel pivoting' : 'try pivoting'}}
+  </button>
+</div>
 
 <ag-grid-angular
   [defaultColDef]="defaultColDef"
@@ -17,7 +19,7 @@
   [pivotMode]="pivotMode"
   style="height: 700px;"
   (gridReady)="gridReady($event)"
-  [columnDefs]="colDefs"
+  [columnDefs]="pivotMode ? pivotingColDefs : colDefs"
   [pivotPanelShow]="'onlyWhenPivoting'"
   [enableAdvancedFilter]="enableAdvancedFilter"
   [sideBar]="showSidebar"
