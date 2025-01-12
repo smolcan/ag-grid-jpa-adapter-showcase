@@ -4,12 +4,12 @@ import {ColDef} from 'ag-grid-community'; // Column Definition Type Interface
 import {
   AllEnterpriseModule, GridApi, GridReadyEvent,
   IServerSideDatasource,
-  IServerSideGetRowsParams, ITextFilterParams,
+  IServerSideGetRowsParams,
   LoadSuccessParams, ModuleRegistry
 } from 'ag-grid-enterprise';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {CustomNumberFilterComponent} from './custom-number-filter/custom-number-filter.component';
-import {themeAlpine} from 'ag-grid-community';
+import {themeQuartz} from 'ag-grid-community';
 import {Trade} from './trade';
 
 @Component({
@@ -26,28 +26,18 @@ export class AppComponent {
   private gridApi: GridApi<Trade> | null = null;
   pivotMode: boolean = false;
 
-  theme = themeAlpine.withParams({
-    /* Changes the color of the grid text */
-    foregroundColor: 'rgb(220, 220, 220)', /* Light gray text for readability */
-
-    /* Changes the color of the grid background */
-    backgroundColor: 'rgb(30, 30, 30)', /* Very dark gray background for the grid */
-
-    /* Changes the header color of the top row */
-    headerBackgroundColor: 'rgb(50, 50, 50)', /* Darker gray for the header */
-
-    /* Changes the hover color of the row */
-    rowHoverColor: 'rgb(70, 70, 70)', /* Medium dark gray to highlight hovered rows */
-
-    /* Optional: Borders and grid lines */
-    borderColor: 'rgb(60, 60, 60)', /* Slightly lighter border lines */
-
-    /* Optional: Focused cell or active row */
-    selectedRowBackgroundColor: 'rgb(80, 80, 80)', /* Subtle lighter gray for selected rows */
-
-    /* Optional: Alternate row background for zebra striping */
-    oddRowBackgroundColor: 'rgb(35, 35, 35)', /* Dark gray for odd rows */
-  });
+  theme = themeQuartz
+    .withParams({
+      backgroundColor: "#1f2836",
+      browserColorScheme: "dark",
+      chromeBackgroundColor: {
+        ref: "foregroundColor",
+        mix: 0.07,
+        onto: "backgroundColor"
+      },
+      foregroundColor: "#FFF",
+      headerFontSize: 14
+    });
 
   enableAdvancedFilter = false;
 
