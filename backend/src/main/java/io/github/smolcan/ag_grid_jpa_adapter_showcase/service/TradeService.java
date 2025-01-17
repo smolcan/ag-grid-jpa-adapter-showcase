@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.dto.CustomNumberFilter;
 import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.entity.Trade;
+import io.github.smolcan.aggrid.jpa.adapter.exceptions.OnPivotMaxColumnsExceededException;
 import io.github.smolcan.aggrid.jpa.adapter.query.QueryBuilder;
 import io.github.smolcan.aggrid.jpa.adapter.request.ServerSideGetRowsRequest;
 import io.github.smolcan.aggrid.jpa.adapter.response.LoadSuccessParams;
@@ -26,8 +27,8 @@ public class TradeService {
     @Autowired
     public TradeService(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.queryBuilder = new QueryBuilder<>(Trade.class, entityManager)
-                .registerCustomColumnFilterRecognizer((map) -> {
+        this.queryBuilder = QueryBuilder.builder(Trade.class, entityManager)
+                .addCustomColumnFilterRecognizer((map) -> {
                     if (map.containsKey("filterType") && "customNumber".equalsIgnoreCase(map.get("filterType").toString())) {
                         CustomNumberFilter customNumberFilter = new CustomNumberFilter();
                         customNumberFilter.setValue(map.get("value").toString());
@@ -35,10 +36,12 @@ public class TradeService {
                     } else {
                         return null;
                     }
-                });
+                })
+                .build();
     }
     
-    public LoadSuccessParams getRows(ServerSideGetRowsRequest request) throws JsonProcessingException {
+    public LoadSuccessParams getRows(ServerSideGetRowsRequest request) 
+            throws JsonProcessingException, OnPivotMaxColumnsExceededException {
         LOGGER.info("getRows called, received request: ");
         LOGGER.info(OBJECT_MAPPER.writeValueAsString(request));
         LOGGER.info("executing...: ");
