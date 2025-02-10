@@ -7,6 +7,8 @@ import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.entity.Trade;
 import io.github.smolcan.aggrid.jpa.adapter.column.ColDef;
 import io.github.smolcan.aggrid.jpa.adapter.exceptions.OnPivotMaxColumnsExceededException;
 import io.github.smolcan.aggrid.jpa.adapter.filter.model.simple.params.MultiFilterParams;
+import io.github.smolcan.aggrid.jpa.adapter.filter.model.simple.params.SetFilterParams;
+import io.github.smolcan.aggrid.jpa.adapter.filter.model.simple.params.TextFilterParams;
 import io.github.smolcan.aggrid.jpa.adapter.filter.provided.AgMultiColumnFilter;
 import io.github.smolcan.aggrid.jpa.adapter.filter.provided.AgSetColumnFilter;
 import io.github.smolcan.aggrid.jpa.adapter.filter.provided.simple.AgDateColumnFilter;
@@ -60,6 +62,14 @@ public class TradeService {
                                                         .filters(
                                                                 new AgTextColumnFilter(),
                                                                 new AgSetColumnFilter()
+                                                                        .filterParams(
+                                                                                SetFilterParams
+                                                                                        .builder()
+                                                                                        .textFormatter((cb, expr) -> {
+                                                                                            return cb.trim(cb.lower(expr));
+                                                                                        })
+                                                                                        .build()
+                                                                        )
                                                         )
                                                         .build()
                                         )
@@ -90,7 +100,18 @@ public class TradeService {
                         // Portfolio with text filter
                         ColDef.builder()
                                 .field("portfolio")
-                                .filter(new AgTextColumnFilter())
+                                .filter(
+                                        new AgTextColumnFilter()
+                                                .filterParams(
+                                                        TextFilterParams.builder()
+                                                                .caseSensitive(false)
+                                                                .textFormatter((cb, expr) -> cb.trim(expr))
+                                                                .textMatcher((cb, params) -> {
+                                                                    return cb.equal(cb.trim(params.getValue()), cb.trim(params.getFilterText()));
+                                                                })
+                                                                .build()
+                                                )
+                                )
                                 .build(),
 
                         // Book with text filter
