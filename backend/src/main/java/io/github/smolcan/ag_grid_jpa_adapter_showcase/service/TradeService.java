@@ -3,6 +3,7 @@ package io.github.smolcan.ag_grid_jpa_adapter_showcase.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.dto.CustomNumberFilter;
+import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.dto.CustomNumberFilterParams;
 import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.entity.Trade;
 import io.github.smolcan.aggrid.jpa.adapter.column.ColDef;
 import io.github.smolcan.aggrid.jpa.adapter.exceptions.OnPivotMaxColumnsExceededException;
@@ -42,11 +43,18 @@ public class TradeService {
                         ColDef.builder()
                                 .field("tradeId")
                                 .filter(new AgMultiColumnFilter()
+                                        
                                         .filterParams(
                                                 MultiFilterParams.builder()
                                                         .filters(
                                                                 new AgNumberColumnFilter(),
                                                                 new CustomNumberFilter()
+                                                                        .filterParams(
+                                                                                CustomNumberFilterParams
+                                                                                        .builder()
+                                                                                        .includeNullValues(true)
+                                                                                        .build()
+                                                                        )
                                                         )
                                                         .build()
                                         )
@@ -202,6 +210,7 @@ public class TradeService {
                                 .build()
 
                         )
+                .enableAdvancedFilter(true)
                 .build();
     }
     

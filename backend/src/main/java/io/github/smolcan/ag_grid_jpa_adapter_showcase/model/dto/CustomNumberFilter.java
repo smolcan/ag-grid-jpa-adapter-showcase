@@ -18,7 +18,7 @@ public class CustomNumberFilter extends IFilter<CustomNumberFilterModel, CustomN
     @Override
     // default params with default values
     public CustomNumberFilterParams getDefaultFilterParams() {
-        return new CustomNumberFilterParams();
+        return CustomNumberFilterParams.builder().build();
     }
 
     @Override
