@@ -19,9 +19,11 @@ import io.github.smolcan.aggrid.jpa.adapter.query.QueryBuilder;
 import io.github.smolcan.aggrid.jpa.adapter.request.ServerSideGetRowsRequest;
 import io.github.smolcan.aggrid.jpa.adapter.response.LoadSuccessParams;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -42,6 +44,9 @@ public class TradeService {
                         // trade id
                         ColDef.builder()
                                 .field("tradeId")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgMultiColumnFilter()
                                         
                                         .filterParams(
@@ -64,6 +69,9 @@ public class TradeService {
                         // product
                         ColDef.builder()
                                 .field("product")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgMultiColumnFilter()
                                         .filterParams(
                                                 MultiFilterParams.builder()
@@ -87,6 +95,9 @@ public class TradeService {
                         // birthDate
                         ColDef.builder()
                                 .field("birthDate")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgMultiColumnFilter()
                                         .filterParams(
                                                 MultiFilterParams.builder()
@@ -102,20 +113,32 @@ public class TradeService {
                         // isSold
                         ColDef.builder()
                                 .field("isSold")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgSetColumnFilter())
                                 .build(),
 
                         // Portfolio with text filter
                         ColDef.builder()
                                 .field("portfolio")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(
                                         new AgTextColumnFilter()
                                                 .filterParams(
                                                         TextFilterParams.builder()
-                                                                .caseSensitive(false)
-                                                                .textFormatter((cb, expr) -> cb.trim(expr))
-                                                                .textMatcher((cb, params) -> {
-                                                                    return cb.equal(cb.trim(params.getValue()), cb.trim(params.getFilterText()));
+                                                                .textFormatter((cb, expr) -> {
+                                                                    Expression<String> newExpression = expr;
+                                                                    // lower input
+                                                                    newExpression = cb.lower(newExpression);
+                                                                    // Remove accents
+                                                                    newExpression = cb.function("TRANSLATE", String.class, newExpression,
+                                                                            cb.literal("áéíóúÁÉÍÓÚüÜñÑ"),
+                                                                            cb.literal("aeiouAEIOUuUnN"));
+                                                                    
+                                                                    return newExpression;
                                                                 })
                                                                 .build()
                                                 )
@@ -125,12 +148,18 @@ public class TradeService {
                         // Book with text filter
                         ColDef.builder()
                                 .field("book")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgTextColumnFilter())
                                 .build(),
 
                         // Submitter ID with multi-column filter
                         ColDef.builder()
                                 .field("submitterId")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgMultiColumnFilter()
                                         .filterParams(
                                                 MultiFilterParams.builder()
@@ -146,72 +175,111 @@ public class TradeService {
                         // Submitter Deal ID with number filter
                         ColDef.builder()
                                 .field("submitterDealId")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // Deal Type with text filter
                         ColDef.builder()
                                 .field("dealType")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgTextColumnFilter())
                                 .build(),
 
                         // Bid Type with text filter
                         ColDef.builder()
                                 .field("bidType")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgTextColumnFilter())
                                 .build(),
 
                         // Current Value with number filter
                         ColDef.builder()
                                 .field("currentValue")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // Previous Value with number filter
                         ColDef.builder()
                                 .field("previousValue")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // PL1 with number filter
                         ColDef.builder()
                                 .field("pl1")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // PL2 with number filter
                         ColDef.builder()
                                 .field("pl2")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // Gain Dx with number filter
                         ColDef.builder()
                                 .field("gainDx")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // SX Px with number filter
                         ColDef.builder()
                                 .field("sxPx")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // X99 Out with number filter
                         ColDef.builder()
                                 .field("x99Out")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build(),
 
                         // Batch with number filter
                         ColDef.builder()
                                 .field("batch")
+                                .enableValue(true)
+                                .enableRowGroup(true)
+                                .enablePivot(true)
                                 .filter(new AgNumberColumnFilter())
                                 .build()
 
                         )
                 .enableAdvancedFilter(true)
                 .build();
+    }
+    
+    public List<Trade> getRowsForClientSideModel() {
+        return this.entityManager.createQuery("SELECT t FROM Trade t", Trade.class)
+                .setMaxResults(50000)
+                .getResultList();
     }
     
     public LoadSuccessParams getRows(ServerSideGetRowsRequest request) 

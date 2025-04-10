@@ -1,12 +1,14 @@
 package io.github.smolcan.ag_grid_jpa_adapter_showcase.model.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.smolcan.ag_grid_jpa_adapter_showcase.model.entity.Trade;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -27,7 +29,9 @@ public class TradeDto {
     private BigDecimal sxPx;
     private BigDecimal x99Out;
     private Integer batch;
-    
+    private LocalDate birthDate;
+    @JsonProperty("isSold")
+    private boolean isSold;
     
     public TradeDto(Trade trade) {
         this.tradeId = trade.getTradeId();
@@ -46,5 +50,7 @@ public class TradeDto {
         this.sxPx = trade.getSxPx();
         this.x99Out = trade.getX99Out();
         this.batch = trade.getBatch();
+        this.birthDate = trade.getBirthDate();
+        this.isSold = trade.getIsSold();
     }
 }

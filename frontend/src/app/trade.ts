@@ -15,4 +15,6 @@ export interface Trade {
   sxPx?: string; // Representing BigDecimal as string
   x99Out?: string; // Representing BigDecimal as string
   batch?: number;
+  birthDate: string;
+  isSold: boolean;
 }

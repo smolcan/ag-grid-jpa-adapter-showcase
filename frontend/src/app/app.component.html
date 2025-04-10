@@ -1,26 +1,49 @@
 <div class="button-container">
-  <button class="styled-button" (click)="toggleAdvancedFilter()">
+  <button class="styled-button" [ngClass]="{'active-button': enableAdvancedFilter}" (click)="toggleAdvancedFilter()">
     {{enableAdvancedFilter ? 'DISABLE ADVANCED FILTER' : 'ENABLE ADVANCED FILTER'}}
   </button>
-  <button class="styled-button" (click)="toggleShowSidebar()">
+  <button class="styled-button" [ngClass]="{'active-button': showSidebar}" (click)="toggleShowSidebar()">
     {{showSidebar ? 'HIDE SIDEBAR' : 'SHOW SIDEBAR'}}
   </button>
-  <button class="styled-button" (click)="togglePivoting()">
-    {{pivotMode ? 'cancel pivoting' : 'try pivoting'}}
+  <button class="styled-button" [ngClass]="{'active-button': pivotMode}" (click)="togglePivoting()">
+    {{pivotMode ? 'CANCEL PIVOTING' : 'TRY PIVOTING'}}
+  </button>
+  <button class="styled-button" [ngClass]="{'active-button': !isServerSide}" (click)="toggleDataMode()">
+    {{isServerSide ? 'SWITCH TO CLIENT-SIDE' : 'SWITCH TO SERVER-SIDE'}}
   </button>
 </div>
 
-<ag-grid-angular
-  [defaultColDef]="defaultColDef"
-  [rowModelType]="'serverSide'"
-  [serverSideDatasource]="serverSideDatasource"
-  [rowGroupPanelShow]="'always'"
-  [theme]="theme"
-  [pivotMode]="pivotMode"
-  style="height: 700px;"
-  (gridReady)="gridReady($event)"
-  [columnDefs]="pivotMode ? pivotingColDefs : colDefs"
-  [pivotPanelShow]="'onlyWhenPivoting'"
-  [enableAdvancedFilter]="enableAdvancedFilter"
-  [sideBar]="showSidebar"
-/>
+<!-- Server-Side Grid -->
+@if (isServerSide) {
+  <ag-grid-angular
+    [defaultColDef]="defaultColDef"
+    [groupAggFiltering]="true"
+    [rowModelType]="'serverSide'"
+    [serverSideDatasource]="serverSideDatasource"
+    [rowGroupPanelShow]="'always'"
+    [theme]="theme"
+    [pivotMode]="pivotMode"
+    style="height: 700px;"
+    (gridReady)="onServerSideGridReady($event)"
+    [columnDefs]="pivotMode ? pivotingColDefs : colDefs"
+    [pivotPanelShow]="'onlyWhenPivoting'"
+    [enableAdvancedFilter]="enableAdvancedFilter"
+    [sideBar]="showSidebar"
+  />
+} @else {
+  <ag-grid-angular
+    [defaultColDef]="defaultColDef"
+    [groupAggFiltering]="false"
+    [rowModelType]="'clientSide'"
+    [rowData]="rowData"
+    [rowGroupPanelShow]="'always'"
+    [theme]="theme"
+    [pivotMode]="pivotMode"
+    style="height: 700px;"
+    (gridReady)="onClientSideGridReady($event)"
+    [columnDefs]="pivotMode ? pivotingColDefs : colDefs"
+    [pivotPanelShow]="'onlyWhenPivoting'"
+    [enableAdvancedFilter]="enableAdvancedFilter"
+    [sideBar]="showSidebar"
+  />
+}

@@ -11,20 +11,27 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {CustomNumberFilterComponent} from './custom-number-filter/custom-number-filter.component';
 import {themeQuartz} from 'ag-grid-community';
 import {Trade} from './trade';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   imports: [
     AgGridAngular,
     HttpClientModule,
+    NgClass,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-
-  private gridApi: GridApi<Trade> | null = null;
+  isServerSide: boolean = true; // Controls which grid is displayed
+  rowData: Trade[] | null = null; // To store client-side data
   pivotMode: boolean = false;
+  enableAdvancedFilter = false;
+  showSidebar = true;
+
+  private serverSideGridApi: GridApi<Trade> | null = null;
+  private clientSideGridApi: GridApi<Trade> | null = null;
 
   theme = themeQuartz
     .withParams({
@@ -39,28 +46,59 @@ export class AppComponent {
       headerFontSize: 14
     });
 
-  enableAdvancedFilter = false;
-
-  gridReady(event: GridReadyEvent<Trade>) {
-    this.gridApi = event.api;
-  }
-
-  toggleAdvancedFilter() {
-    this.enableAdvancedFilter = !this.enableAdvancedFilter;
-  }
-
-  showSidebar = true;
-
-  toggleShowSidebar() {
-    this.showSidebar = !this.showSidebar;
-  }
-
   constructor(
     private http: HttpClient
   ) {
     ModuleRegistry.registerModules([AllEnterpriseModule])
   }
 
+  // Toggle between server-side and client-side grids
+  toggleDataMode() {
+    this.isServerSide = !this.isServerSide;
+
+    // If switching to client-side and we don't have data yet, fetch it
+    if (!this.isServerSide && !this.rowData) {
+      this.loadClientSideData();
+    }
+  }
+
+  // Load client-side data
+  loadClientSideData() {
+    this.http.get<Trade[]>('http://localhost:8080/getClientSideRows').subscribe(
+      (data) => {
+        this.rowData = data;
+      },
+      (error) => {
+        console.error('Error loading client-side data:', error);
+      }
+    );
+  }
+
+  // Grid ready events for both grids
+  onServerSideGridReady(event: GridReadyEvent<Trade>) {
+    this.serverSideGridApi = event.api;
+  }
+
+  onClientSideGridReady(event: GridReadyEvent<Trade>) {
+    this.clientSideGridApi = event.api;
+
+    // If we don't have client-side data yet, fetch it
+    if (!this.rowData) {
+      this.loadClientSideData();
+    }
+  }
+
+  toggleAdvancedFilter() {
+    this.enableAdvancedFilter = !this.enableAdvancedFilter;
+  }
+
+  toggleShowSidebar() {
+    this.showSidebar = !this.showSidebar;
+  }
+
+  togglePivoting() {
+    this.pivotMode = !this.pivotMode;
+  }
 
   serverSideDatasource: IServerSideDatasource = {
     getRows: (params: IServerSideGetRowsParams) => {
@@ -243,8 +281,4 @@ export class AppComponent {
     }
     return colDef; // Leave other columns unchanged
   });
-
-  togglePivoting() {
-    this.pivotMode = !this.pivotMode;
-  }
 }
