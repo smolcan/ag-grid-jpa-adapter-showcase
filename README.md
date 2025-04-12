@@ -1,13 +1,19 @@
 # Showcase for [AG Grid JPA Adapter](https://github.com/smolcan/ag-grid-jpa-adapter)
 
-Showcase using PostgreSQL database, Spring boot backend and Angular client.
+Showcase using chosen database, Spring boot backend and Angular client.
 
-Start with:
+## Choose database you want to try:
+Choose one of these:
+- postgres
+- mysql
+
+## Start with:
+Run shell script with databse you chose. If you do not specify the --db param, postgres database will be used.
 ```bash
-docker compose up
+./run.sh --db mysql
 ```
 
-Stop with:
+## Stop with:
 ```bash
 docker compose down
 ```
