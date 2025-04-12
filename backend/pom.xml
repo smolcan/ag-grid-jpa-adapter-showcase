@@ -45,6 +45,11 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
@@ -54,11 +59,6 @@
 			<groupId>io.github.smolcan</groupId>
 			<artifactId>ag-grid-jpa-adapter</artifactId>
 			<version>0.0.7</version>
-		</dependency>
-		<dependency>
-			<groupId>p6spy</groupId>
-			<artifactId>p6spy</artifactId>
-			<version>3.9.1</version>
 		</dependency>
 	</dependencies>
 

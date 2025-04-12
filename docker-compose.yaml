@@ -8,20 +8,25 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:p6spy:postgresql://database:5432/mydatabase
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://database:5432/mydatabase}
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
   
   database:
-    image: postgres:15
+    image: ${DB_IMAGE:-postgres:15}
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: ${POSTGRES_DB:-mydatabase}
+      POSTGRES_USER: ${POSTGRES_USER:-myuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mypassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mydatabase}
+      MYSQL_USER: ${MYSQL_USER:-myuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mypassword}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:${DB_CONTAINER_PORT:-5432}"
     volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./database/init_${DB_TYPE:-postgres}.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   frontend:
     build:
@@ -29,4 +34,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4200:4200"
-    
