@@ -6,6 +6,7 @@ Showcase using chosen database, Spring boot backend and Angular client.
 Choose one of these:
 - postgres
 - mysql
+- mariadb
 
 ## Start with:
 Run shell script with databse you chose. If you do not specify the --db param, postgres database will be used.
