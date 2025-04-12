@@ -29,6 +29,13 @@ elif [ "$DB_TYPE" = "mysql" ]; then
   export DB_CONTAINER_PORT="3306"
   export DB_URL="jdbc:mysql://database:3306/mydatabase"
   export DB_DRIVER_CLASS_NAME="com.mysql.cj.jdbc.Driver"
+elif [ "$DB_TYPE" = "mariadb" ]; then
+  export DB_TYPE="mariadb"
+  export DB_IMAGE="mariadb:10.11"
+  export DB_PORT="3306"
+  export DB_CONTAINER_PORT="3306"
+  export DB_URL="jdbc:mariadb://database:3306/mydatabase"
+  export DB_DRIVER_CLASS_NAME="org.mariadb.jdbc.Driver"
 else
   echo "Unsupported database type: $DB_TYPE"
   echo "Supported types: postgres, mysql"

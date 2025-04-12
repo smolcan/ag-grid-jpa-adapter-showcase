@@ -24,6 +24,10 @@ services:
       MYSQL_USER: ${MYSQL_USER:-myuser}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mypassword}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MARIADB_DATABASE: ${MYSQL_DATABASE:-mydatabase}
+      MARIADB_USER: ${MYSQL_USER:-myuser}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD:-mypassword}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
     ports:
       - "${DB_PORT:-5432}:${DB_CONTAINER_PORT:-5432}"
     volumes:
