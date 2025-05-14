@@ -29,6 +29,7 @@ export class AppComponent {
   pivotMode: boolean = false;
   enableAdvancedFilter = false;
   showSidebar = true;
+  pagination = true;
 
   refetchRowCount: boolean = true;
 
@@ -108,11 +109,25 @@ export class AppComponent {
     this.pivotMode = !this.pivotMode;
   }
 
+  togglePagination() {
+    this.pagination = !this.pagination;
+    if (this.pagination) {
+      this.refetchRowCount = true;
+    }
+
+    // Optional: If you need to refresh the grid after toggling pagination
+    if (this.serverSideGridApi) {
+      this.serverSideGridApi.refreshServerSide({
+        purge: true
+      });
+    }
+  }
+
   serverSideDatasource: IServerSideDatasource = {
     getRows: (params: IServerSideGetRowsParams) => {
       const dataRequest = this.http.post<LoadSuccessParams>('http://localhost:8080/getRows', params.request).toPromise();
 
-      if (this.refetchRowCount) {
+      if (this.pagination && this.refetchRowCount) {
         const countRequest = this.http.post<number>('http://localhost:8080/countRows', params.request).toPromise();
 
         Promise.all([dataRequest, countRequest])
