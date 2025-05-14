@@ -4,7 +4,7 @@ FROM openjdk:21-jdk-slim as build
 WORKDIR /app
 ADD . /app
 ENV JAVA_TOOL_OPTIONS="-XX:UseSVE=0"
-RUN --mount=type=cache,target=/root/.m2 ./mvnw -f /app/pom.xml clean package
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -U -f /app/pom.xml clean package
 
 # run stage
 FROM openjdk:21-jdk-slim
