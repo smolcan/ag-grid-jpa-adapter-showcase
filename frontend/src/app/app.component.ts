@@ -30,6 +30,9 @@ export class AppComponent {
   enableAdvancedFilter = false;
   showSidebar = true;
 
+  refetchRowCount: boolean = true;
+
+
   private serverSideGridApi: GridApi<Trade> | null = null;
   private clientSideGridApi: GridApi<Trade> | null = null;
 
@@ -77,6 +80,11 @@ export class AppComponent {
   // Grid ready events for both grids
   onServerSideGridReady(event: GridReadyEvent<Trade>) {
     this.serverSideGridApi = event.api;
+
+    event.api.addEventListener('filterChanged', () => this.refetchRowCount = true);
+    event.api.addEventListener('columnRowGroupChanged', () => this.refetchRowCount = true);
+    event.api.addEventListener('columnPivotChanged', () => this.refetchRowCount = true);
+    event.api.addEventListener('columnValueChanged', () => this.refetchRowCount = true);
   }
 
   onClientSideGridReady(event: GridReadyEvent<Trade>) {
@@ -102,11 +110,32 @@ export class AppComponent {
 
   serverSideDatasource: IServerSideDatasource = {
     getRows: (params: IServerSideGetRowsParams) => {
-      this.http.post<LoadSuccessParams>('http://localhost:8080/getRows', params.request).subscribe((res) => {
-        params.success(res);
-      }, () => {
-        params.fail();
-      })
+      const dataRequest = this.http.post<LoadSuccessParams>('http://localhost:8080/getRows', params.request).toPromise();
+
+      if (this.refetchRowCount) {
+        const countRequest = this.http.post<number>('http://localhost:8080/countRows', params.request).toPromise();
+
+        Promise.all([dataRequest, countRequest])
+          .then(([data, rowCount]) => {
+            params.success({
+              ...data as LoadSuccessParams,
+              rowCount: rowCount
+            });
+            this.refetchRowCount = false;
+          })
+          .catch(() => {
+            params.fail();
+          });
+
+      } else {
+        dataRequest
+          .then((data) => {
+            params.success(data as LoadSuccessParams);
+          })
+          .catch(() => {
+            params.fail();
+          });
+      }
     }
   }
 

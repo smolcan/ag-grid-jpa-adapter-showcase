@@ -37,5 +37,12 @@ public class TradeController {
         LoadSuccessParams result = this.tradeService.getRows(request);
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping("/countRows")
+    public ResponseEntity<Long> countRows(@RequestBody ServerSideGetRowsRequest request)
+            throws JsonProcessingException, OnPivotMaxColumnsExceededException {
+        long result = this.tradeService.countRows(request);
+        return ResponseEntity.ok(result);
+    }
     
 }

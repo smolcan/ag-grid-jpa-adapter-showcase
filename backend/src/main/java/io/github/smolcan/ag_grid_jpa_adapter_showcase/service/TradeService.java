@@ -22,6 +22,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -282,11 +283,21 @@ public class TradeService {
                 .getResultList();
     }
     
+    @Transactional
     public LoadSuccessParams getRows(ServerSideGetRowsRequest request) 
             throws JsonProcessingException, OnPivotMaxColumnsExceededException {
         LOGGER.info("getRows called, received request: ");
         LOGGER.info(OBJECT_MAPPER.writeValueAsString(request));
         LOGGER.info("executing...: ");
         return this.queryBuilder.getRows(request);
+    }
+    
+    @Transactional
+    public long countRows(ServerSideGetRowsRequest request)
+            throws JsonProcessingException, OnPivotMaxColumnsExceededException {
+        LOGGER.info("countRows called, received request: ");
+        LOGGER.info(OBJECT_MAPPER.writeValueAsString(request));
+        LOGGER.info("executing...: ");
+        return this.queryBuilder.countRows(request);
     }
 }
