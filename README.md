@@ -13,6 +13,10 @@ Run shell script with databse you chose. If you do not specify the --db param, p
 ```bash
 ./run.sh --db mysql
 ```
+You can also run docker composition directly without shell script (postgres database will be used).
+```bash
+docker compose up
+```
 
 ## Stop with:
 ```bash
