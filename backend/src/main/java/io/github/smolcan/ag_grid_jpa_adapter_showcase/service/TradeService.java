@@ -274,6 +274,7 @@ public class TradeService {
 
                         )
                 .enableAdvancedFilter(true)
+                .paginateChildRows(true)
                 .build();
     }
     

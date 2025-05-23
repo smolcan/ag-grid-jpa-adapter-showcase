@@ -30,6 +30,7 @@ export class AppComponent {
   enableAdvancedFilter = false;
   showSidebar = true;
   pagination = true;
+  paginateChildRows = true;
 
   refetchRowCount: boolean = true;
 
