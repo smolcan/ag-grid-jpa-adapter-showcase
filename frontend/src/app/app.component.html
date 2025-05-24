@@ -11,17 +11,12 @@
   <button class="styled-button" [ngClass]="{'active-button': !isServerSide}" (click)="toggleDataMode()">
     {{isServerSide ? 'SWITCH TO CLIENT-SIDE' : 'SWITCH TO SERVER-SIDE'}}
   </button>
-  <div class="pagination-toggle">
-    <input type="checkbox" id="paginationToggle" [checked]="pagination" (change)="togglePagination()">
-    <label for="paginationToggle">Enable Pagination</label>
-  </div>
 </div>
 
 <!-- Server-Side Grid -->
 @if (isServerSide) {
   <ag-grid-angular
     [defaultColDef]="defaultColDef"
-    [groupAggFiltering]="true"
     [rowModelType]="'serverSide'"
     [pagination]="pagination"
     [paginateChildRows]="paginateChildRows"
@@ -39,7 +34,6 @@
 } @else {
   <ag-grid-angular
     [defaultColDef]="defaultColDef"
-    [groupAggFiltering]="false"
     [rowModelType]="'clientSide'"
     [rowData]="rowData"
     [pagination]="pagination"

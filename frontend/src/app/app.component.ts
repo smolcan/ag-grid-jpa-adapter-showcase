@@ -31,7 +31,6 @@ export class AppComponent {
   showSidebar = true;
   pagination = true;
   paginateChildRows = true;
-
   refetchRowCount: boolean = true;
 
 
@@ -87,6 +86,8 @@ export class AppComponent {
     event.api.addEventListener('columnRowGroupChanged', () => this.refetchRowCount = true);
     event.api.addEventListener('columnPivotChanged', () => this.refetchRowCount = true);
     event.api.addEventListener('columnValueChanged', () => this.refetchRowCount = true);
+    // if opened row group and paginate child rows is turned on, need to refetch row count
+    event.api.addEventListener('rowGroupOpened', () => this.refetchRowCount = this.paginateChildRows);
   }
 
   onClientSideGridReady(event: GridReadyEvent<Trade>) {
