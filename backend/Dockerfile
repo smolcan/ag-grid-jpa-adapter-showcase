@@ -3,6 +3,7 @@
 FROM openjdk:21-jdk-slim as build
 WORKDIR /app
 ADD . /app
+ENV JAVA_TOOL_OPTIONS="-XX:UseSVE=0"
 RUN --mount=type=cache,target=/root/.m2 ./mvnw -U -f /app/pom.xml clean package
 
 # run stage
@@ -13,4 +14,4 @@ COPY --from=build /app/target/ag-grid-jpa-adapter-showcase-0.0.1-SNAPSHOT.jar ap
 # Expose the default Spring Boot port
 EXPOSE 8080
 # Set the default command to run the Spring Boot application
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-XX:UseSVE=0", "-jar", "app.jar"]
