@@ -1,19 +1,19 @@
-import React, { useMemo, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import { ModuleRegistry } from 'ag-grid-community';
+import React, {useMemo, useState} from 'react';
+import {useColorMode} from '@docusaurus/theme-common';
 import {
     ColDef,
     GridReadyEvent,
     IServerSideDatasource,
     ServerSideRowModelModule,
+    TextFilterModule, TextFilterParams,
     themeQuartz
 } from 'ag-grid-enterprise';
-import { useColorMode } from '@docusaurus/theme-common';
+import {AgGridReact} from 'ag-grid-react';
+import {ModuleRegistry} from 'ag-grid-community';
 
-// Register the required modules
-ModuleRegistry.registerModules([ServerSideRowModelModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, TextFilterModule]);
 
-const SortingGrid = () => {
+const TextFilterGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { colorMode } = useColorMode();
 
@@ -32,34 +32,55 @@ const SortingGrid = () => {
 
     const columnDefs = useMemo(() => [
         {
-            headerName: 'Trade ID - (Sorting works)',
+            headerName: 'Trade Id',
             field: 'tradeId',
-            sortable: true,
-            cellDataType: 'number'
+            cellDataType: 'number',
+            filter: false,
         },
         {
-            headerName: 'Product - (Sorting turned off)',
-            field: 'product',
-            sortable: false,
-            cellDataType: 'text'
-        },
-        {
-            headerName: 'Portfolio - (Sorting will cause error)',
+            headerName: 'Portfolio',
             field: 'portfolio',
-            sortable: true,
+            cellDataType: 'text',
+            filter: 'agTextColumnFilter',
+        },
+        {
+            headerName: 'Product',
+            field: 'product',
+            cellDataType: 'text',
+            filter: 'agTextColumnFilter',
+            filterType: {
+                caseSensitive: false,
+            } as TextFilterParams,
+        },
+        {
+            headerName: 'Book',
+            field: 'book',
+            cellDataType: 'text',
+            filter: 'agTextColumnFilter',
+            filterType: {
+            } as TextFilterParams,
+        },
+        {
+            headerName: 'Deal Type',
+            field: 'dealType',
             cellDataType: 'text'
-        }
+        },
+        {
+            headerName: 'Bid Type',
+            field: 'bidType',
+            cellDataType: 'text'
+        },
     ] as ColDef[], []);
 
     const defaultColDef = useMemo(() => ({
         resizable: true,
-        filter: false,
+        filter: true,
         flex: 1,
     } as ColDef), []);
 
     const serverSideDatasource: IServerSideDatasource = useMemo(() => ({
         getRows: (params) => {
-            fetch('http://localhost:8080/docs/sorting/getRows', {
+            fetch('http://localhost:8080/docs/filtering/column-filter/text-filter/getRows', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,4 +148,4 @@ const SortingGrid = () => {
     );
 };
 
-export default SortingGrid;
+export default TextFilterGrid;
