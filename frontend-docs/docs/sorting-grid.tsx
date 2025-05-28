@@ -91,7 +91,7 @@ const SortingGrid = () => {
 
     return (
         <div style={{
-            backgroundColor: colorMode == 'dark' ? '#1f2836' : '#ffffff',
+            backgroundColor: colorMode == 'dark' ? '#1a1c1d' : '#ffffff',
             marginBottom: '1rem',
             borderRadius: '8px',
             fontFamily: 'system-ui, -apple-system, sans-serif',
