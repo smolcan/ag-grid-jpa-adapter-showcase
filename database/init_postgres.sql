@@ -1,3 +1,4 @@
+-- POSTGRESQL VERSION
 -- Create the `trade` table
 CREATE TABLE trade (
     trade_id SERIAL PRIMARY KEY,
@@ -30,11 +31,11 @@ BEGIN
             'Portfolio ' || (FLOOR(RANDOM() * 10) + 1),  -- Random portfolio between 1 and 10
             'Book ' || (FLOOR(RANDOM() * 5) + 1),  -- Random book between 1 and 5
             i * 10, 
-            i * 20, 
+            CASE WHEN RANDOM() < 0.2 THEN NULL ELSE i * 20 END,  -- 20% chance of NULL
             'Type ' || (FLOOR(RANDOM() * 3) + 1),  -- Random deal type between 1 and 3
             'Bid ' || (FLOOR(RANDOM() * 2) + 1),
-            RANDOM() * 10000, 
-            RANDOM() * 10000, 
+            CASE WHEN RANDOM() < 0.2 THEN NULL ELSE RANDOM() * 10000 END,  -- 20% chance of NULL
+            CASE WHEN RANDOM() < 0.2 THEN NULL ELSE RANDOM() * 10000 END,  -- 20% chance of NULL
             RANDOM() * 100, 
             RANDOM() * 100, 
             RANDOM() * 50, 

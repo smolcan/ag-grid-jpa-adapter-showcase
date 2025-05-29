@@ -283,8 +283,8 @@ public class TradeService {
                 .setMaxResults(50000)
                 .getResultList();
     }
-    
-    @Transactional
+
+    @Transactional(readOnly = true)
     public LoadSuccessParams getRows(ServerSideGetRowsRequest request) 
             throws JsonProcessingException, OnPivotMaxColumnsExceededException {
         LOGGER.info("getRows called, received request: ");
@@ -292,8 +292,8 @@ public class TradeService {
         LOGGER.info("executing...: ");
         return this.queryBuilder.getRows(request);
     }
-    
-    @Transactional
+
+    @Transactional(readOnly = true)
     public long countRows(ServerSideGetRowsRequest request)
             throws JsonProcessingException, OnPivotMaxColumnsExceededException {
         LOGGER.info("countRows called, received request: ");
