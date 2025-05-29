@@ -42,7 +42,7 @@ BEGIN
             RANDOM() * 50, 
             RANDOM() * 50, 
             i % 100, 
-            CURRENT_DATE - (i % 365), 
+            CASE WHEN RANDOM() < 0.2 THEN NULL ELSE CURRENT_DATE - (i % 365) END, 
             (i % 2) = 0
         );
     END LOOP;
