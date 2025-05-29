@@ -4,11 +4,6 @@ sidebar_position: 1
 ---
 # Quick Start
 
-import Highlight from './Highlight';
-
-
-<Highlight></Highlight>
-
 
 
 ## Introduction
