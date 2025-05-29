@@ -32,11 +32,11 @@ BEGIN
             CONCAT('Portfolio ', FLOOR(1 + RAND() * 10)),
             CONCAT('Book ', FLOOR(1 + RAND() * 5)),
             i * 10, 
-            i * 20, 
+            CASE WHEN RAND() < 0.2 THEN NULL ELSE i * 20 END,  -- 20% chance of NULL
             CONCAT('Type ', FLOOR(1 + RAND() * 3)),
             CONCAT('Bid ', FLOOR(1 + RAND() * 2)),
-            RAND() * 10000, 
-            RAND() * 10000, 
+            CASE WHEN RAND() < 0.2 THEN NULL ELSE RAND() * 10000 END,  -- 20% chance of NULL
+            CASE WHEN RAND() < 0.2 THEN NULL ELSE RAND() * 10000 END,  -- 20% chance of NULL
             RAND() * 100, 
             RAND() * 100, 
             RAND() * 50, 
