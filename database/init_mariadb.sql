@@ -44,7 +44,7 @@ BEGIN
             RAND() * 50, 
             i % 100, 
             CASE WHEN RAND() < 0.2 THEN NULL ELSE DATE_SUB(CURDATE(), INTERVAL (i % 365) DAY) END, 
-            (i % 2) = 0
+            CASE WHEN RAND() < 0.2 THEN NULL ELSE (i % 2) = 0 END
         );
         SET i = i + 1;
     END WHILE;
