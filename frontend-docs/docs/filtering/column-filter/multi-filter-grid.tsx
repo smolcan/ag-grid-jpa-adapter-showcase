@@ -1,8 +1,8 @@
 import {ModuleRegistry} from 'ag-grid-community';
 import {
-    ColDef, GridReadyEvent,
-    IServerSideDatasource,
-    ServerSideRowModelModule, SetFilterModule, SetFilterParams,
+    ColDef, DateFilterModule, GridReadyEvent,
+    IServerSideDatasource, MultiFilterModule, MultiFilterParams,
+    ServerSideRowModelModule, SetFilterModule, SetFilterParams, TextFilterModule,
     themeQuartz
 } from 'ag-grid-enterprise';
 import React, {useMemo, useState} from 'react';
@@ -10,9 +10,9 @@ import {useColorMode} from '@docusaurus/theme-common';
 import {AgGridReact} from 'ag-grid-react';
 
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, SetFilterModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, MultiFilterModule, SetFilterModule, TextFilterModule, DateFilterModule]);
 
-const SetFilterGrid = () => {
+const MultiFilterGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { colorMode } = useColorMode();
 
@@ -40,68 +40,53 @@ const SetFilterGrid = () => {
             headerName: 'Product',
             field: 'product',
             cellDataType: 'text',
-            filter: 'agSetColumnFilter',
+            filter: 'agMultiColumnFilter',
             filterParams: {
-                values: ['Product 1', 'Product 2', 'Product 3', 'Product 4', 'Product 5', 'Product 6', 'Product 7', 'Product 8', 'Product 9', 'Product 10'],
-            } as SetFilterParams,
+                filters: [
+                    {
+                        filter: 'agTextColumnFilter'
+                    },
+                    {
+                        filter: 'agSetColumnFilter',
+                        filterParams: {
+                            values: ['Product 1', 'Product 2', 'Product 3', 'Product 4', 'Product 5', 'Product 6', 'Product 7', 'Product 8', 'Product 9', 'Product 10'],
+                        } as SetFilterParams,
+                    },
+                ],
+            } as MultiFilterParams,
         },
-        {
-            headerName: 'Portfolio',
-            field: 'portfolio',
-            cellDataType: 'text',
-            filter: 'agSetColumnFilter',
-            filterParams: {
-                values: ['Portfolio 1', 'portfolio 2', 'Portfolio 3', 'PORTFOLIO 4', 'Portfolio 5', 'Portfolio 6', 'Portfolio 7', 'Portfolio 8', 'Portfolio 9', 'Portfolio 10'],
-            } as SetFilterParams,
-        },
-        {
-            headerName: 'Book',
-            field: 'book',
-            cellDataType: 'text',
-            filter: 'agSetColumnFilter',
-            filterParams: {
-                values: ['Bóok 1', 'Bóók 2', 'Boók 3'],
-            } as SetFilterParams,
-        },
-        {
-            headerName: 'Submitter Id',
-            field: 'submitterId',
-            cellDataType: 'number',
-            filter: 'agSetColumnFilter',
-            filterParams: {
-                values: [10, 20, 30, 40, 50, 60, 70],
-            }
-        },
+        
         {
             headerName: 'Birth Date',
             field: 'birthDate',
             cellDataType: 'dateText',
-            filter: 'agSetColumnFilter',
+            filter: 'agMultiColumnFilter',
             filterParams: {
-                values: function() {
-                    const count = 50;
-                    const daysBack = 365;
-                    
-                    const dates = new Set();
-                    while (dates.size < count) {
-                        const offset = Math.floor(Math.random() * daysBack);
-                        const date = new Date();
-                        date.setDate(date.getDate() - offset);
-                        const formatted = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-                        dates.add(formatted);
-                    }
-                    return Array.from(dates);
-                }(),
-            }
-        },
-        {
-            headerName: 'Is Sold',
-            field: 'isSold',
-            cellDataType: 'boolean',
-            filter: 'agSetColumnFilter',
-            filterParams: {
-                values: [true, false, undefined],
-            }
+                filters: [
+                    {
+                        filter: 'agDateColumnFilter'
+                    },
+                    {
+                        filter: 'agSetColumnFilter',
+                        filterParams: {
+                            values: function() {
+                                const count = 50;
+                                const daysBack = 365;
+
+                                const dates = new Set();
+                                while (dates.size < count) {
+                                    const offset = Math.floor(Math.random() * daysBack);
+                                    const date = new Date();
+                                    date.setDate(date.getDate() - offset);
+                                    const formatted = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                                    dates.add(formatted);
+                                }
+                                return Array.from(dates);
+                            }(),
+                        }
+                    },
+                ]
+            } as MultiFilterParams,
         },
 
     ] as ColDef[], []);
@@ -114,7 +99,7 @@ const SetFilterGrid = () => {
 
     const serverSideDatasource: IServerSideDatasource = useMemo(() => ({
         getRows: (params) => {
-            fetch('http://localhost:8080/docs/filtering/column-filter/set-filter/getRows', {
+            fetch('http://localhost:8080/docs/filtering/column-filter/multi-filter/getRows', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,4 +167,4 @@ const SetFilterGrid = () => {
     );
 };
 
-export default SetFilterGrid;
+export default MultiFilterGrid;
