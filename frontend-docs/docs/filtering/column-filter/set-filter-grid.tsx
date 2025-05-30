@@ -1,16 +1,16 @@
 import {ModuleRegistry} from 'ag-grid-community';
 import {
-    ColDef, GridReadyEvent,
+    ColDef, ColumnAutoSizeModule, GridReadyEvent,
     IServerSideDatasource,
     ServerSideRowModelModule, SetFilterModule, SetFilterParams,
-    themeQuartz
+    themeQuartz, ValidationModule
 } from 'ag-grid-enterprise';
 import React, {useMemo, useState} from 'react';
 import {useColorMode} from '@docusaurus/theme-common';
 import {AgGridReact} from 'ag-grid-react';
 
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, SetFilterModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, SetFilterModule, ValidationModule, ColumnAutoSizeModule]);
 
 const SetFilterGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -75,7 +75,7 @@ const SetFilterGrid = () => {
         {
             headerName: 'Birth Date',
             field: 'birthDate',
-            cellDataType: 'dateText',
+            cellDataType: 'dateString',
             filter: 'agSetColumnFilter',
             filterParams: {
                 values: function() {

@@ -1,16 +1,16 @@
 import {ModuleRegistry} from 'ag-grid-community';
 import {
-    ColDef, GridReadyEvent,
+    ColDef, ColumnAutoSizeModule, GridReadyEvent,
     IServerSideDatasource, NumberFilterModule, NumberFilterParams,
     ServerSideRowModelModule,
-    themeQuartz
+    themeQuartz, ValidationModule
 } from 'ag-grid-enterprise';
 import React, {useMemo, useState} from 'react';
 import {useColorMode} from '@docusaurus/theme-common';
 import {AgGridReact} from 'ag-grid-react';
 
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, NumberFilterModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, NumberFilterModule, ValidationModule, ColumnAutoSizeModule]);
 const NumberFilterGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { colorMode } = useColorMode();

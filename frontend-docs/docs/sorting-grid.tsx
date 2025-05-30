@@ -2,16 +2,16 @@ import React, { useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry } from 'ag-grid-community';
 import {
-    ColDef,
+    ColDef, ColumnAutoSizeModule,
     GridReadyEvent,
     IServerSideDatasource,
     ServerSideRowModelModule,
-    themeQuartz
+    themeQuartz, ValidationModule
 } from 'ag-grid-enterprise';
 import { useColorMode } from '@docusaurus/theme-common';
 
 // Register the required modules
-ModuleRegistry.registerModules([ServerSideRowModelModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, ValidationModule, ColumnAutoSizeModule]);
 
 const SortingGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);

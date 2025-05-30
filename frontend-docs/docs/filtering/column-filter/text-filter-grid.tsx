@@ -1,17 +1,17 @@
 import React, {useMemo, useState} from 'react';
 import {useColorMode} from '@docusaurus/theme-common';
 import {
-    ColDef,
+    ColDef, ColumnAutoSizeModule,
     GridReadyEvent,
     IServerSideDatasource,
     ServerSideRowModelModule,
     TextFilterModule, TextFilterParams,
-    themeQuartz
+    themeQuartz, ValidationModule
 } from 'ag-grid-enterprise';
 import {AgGridReact} from 'ag-grid-react';
 import {ModuleRegistry} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, TextFilterModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, TextFilterModule, ValidationModule, ColumnAutoSizeModule]);
 
 const TextFilterGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -48,7 +48,7 @@ const TextFilterGrid = () => {
             field: 'product',
             cellDataType: 'text',
             filter: 'agTextColumnFilter',
-            filterType: {
+            filterParams: {
                 caseSensitive: false,
             } as TextFilterParams,
         },
@@ -57,7 +57,7 @@ const TextFilterGrid = () => {
             field: 'book',
             cellDataType: 'text',
             filter: 'agTextColumnFilter',
-            filterType: {
+            filterParams: {
             } as TextFilterParams,
         },
         {

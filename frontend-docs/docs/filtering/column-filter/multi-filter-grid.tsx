@@ -1,16 +1,16 @@
 import {ModuleRegistry} from 'ag-grid-community';
 import {
-    ColDef, DateFilterModule, GridReadyEvent,
+    ColDef, ColumnAutoSizeModule, DateFilterModule, GridReadyEvent,
     IServerSideDatasource, MultiFilterModule, MultiFilterParams,
     ServerSideRowModelModule, SetFilterModule, SetFilterParams, TextFilterModule,
-    themeQuartz
+    themeQuartz, ValidationModule
 } from 'ag-grid-enterprise';
 import React, {useMemo, useState} from 'react';
 import {useColorMode} from '@docusaurus/theme-common';
 import {AgGridReact} from 'ag-grid-react';
 
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, MultiFilterModule, SetFilterModule, TextFilterModule, DateFilterModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, MultiFilterModule, SetFilterModule, TextFilterModule, DateFilterModule, ValidationModule, ColumnAutoSizeModule]);
 
 const MultiFilterGrid = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -59,7 +59,7 @@ const MultiFilterGrid = () => {
         {
             headerName: 'Birth Date',
             field: 'birthDate',
-            cellDataType: 'dateText',
+            cellDataType: 'dateString',
             filter: 'agMultiColumnFilter',
             filterParams: {
                 filters: [
